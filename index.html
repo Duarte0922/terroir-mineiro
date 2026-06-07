@@ -404,14 +404,24 @@ function mudarTab(tab) {
 }
 
 function abrirModal() {
-  var url = window.location.href.replace('terroir-loja.html','terroir-motoboy.html');
+  var url = window.location.href;
+  
+  // Tenta substituir diferentes nomes possíveis do arquivo
+  if (url.includes('terroir-loja.html')) {
+    url = url.replace('terroir-loja.html', 'terroir-motoboy.html');
+  } else if (url.includes('index.html')) {
+    url = url.replace('index.html', 'terroir-motoboy.html');
+  } else if (url.includes('loja.html')) {
+    url = url.replace('loja.html', 'terroir-motoboy.html');
+  } else {
+    // Se não encontrar nenhum dos nomes, adiciona o arquivo no final
+    if (!url.endsWith('/')) url += '/';
+    url += 'terroir-motoboy.html';
+  }
+  
   document.getElementById('link-box').textContent = url;
   document.getElementById('modal-link').classList.remove('hidden');
 }
-function fecharModal(){ document.getElementById('modal-link').classList.add('hidden'); }
-function copiarLink(){ navigator.clipboard.writeText(document.getElementById('link-box').textContent).then(function(){ alert('✅ Copiado!'); }); }
-function enviarLinkWhatsapp(){ window.open('https://wa.me/?text='+encodeURIComponent('Registre suas entregas:\n'+document.getElementById('link-box').textContent),'_blank'); }
-
 function abrirModalPagar(motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel) {
   _pendingPagar = { motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel };
   const info = infoDiaria(dataSel);
