@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terroir Mineiro · Painel Administrativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg:#FFF8E7; --surface:#FFFFFF; --border:#E8D5B5;
+--brown:#8B4513; --brown-light:#F5E6D3;
+--orange:#D97706; --orange-light:#FEF3C7;
+--muted:#9B8B7A; --green:#1F7A4F; --green-bg:#E4F5EC;
+--red:#C0392B; --red-bg:#FEE2E2; --text:#2D1810; --amber:#b45309;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.header{background:var(--brown);padding:0 28px;height:66px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(139,69,19,0.3);}
+.logo-mark{width:42px;height:42px;background:var(--orange);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.logo-text{font-family:'Fraunces',serif;font-size:1.25rem;color:#fff;line-height:1;}
+.logo-text em{color:#FDE68A;font-style:italic;}
+.logo-sub{font-size:0.7rem;color:rgba(255,255,255,0.55);margin-top:2px;font-weight:600;letter-spacing:0.04em;}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.today-date{font-size:0.8rem;color:rgba(255,255,255,0.5);}
+.btn-share{background:var(--orange);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 2px 10px rgba(217,119,6,0.4);transition:all 0.2s;}
+.btn-share:hover{background:#b45309;transform:translateY(-1px);}
+.main{max-width:980px;margin:0 auto;padding:28px 20px 60px;}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.sum-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:18px 16px;text-align:center;}
+.sum-icon{font-size:1.5rem;margin-bottom:8px;}
+.sum-val{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:900;color:var(--brown);line-height:1;letter-spacing:-0.02em;}
+.sum-val.green{color:var(--green);}.sum-val.orange{color:var(--orange);}
+.sum-label{font-size:0.67rem;color:var(--muted);font-weight:700;margin-top:5px;text-transform:uppercase;letter-spacing:0.06em;}
+.tabs{display:flex;gap:8px;margin-bottom:22px;background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:6px;}
+.tab-btn{flex:1;padding:10px 16px;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);}
+.tab-btn.active{background:var(--brown);color:#fff;box-shadow:0 2px 10px rgba(139,69,19,0.3);}
+.tab-btn:hover:not(.active){background:var(--brown-light);color:var(--brown);}
+.tab-content{display:none;}.tab-content.active{display:block;}
+.filter-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:22px;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;}
+.filter-field{flex:1;min-width:140px;}
+.filter-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;display:block;}
+.diaria-badge{display:inline-flex;align-items:center;gap:6px;background:var(--orange-light);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;font-size:0.72rem;font-weight:700;color:var(--brown);margin-top:5px;}
+input[type="date"],input[type="text"],input[type="number"]{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;color:var(--text);background:var(--bg);outline:none;transition:border-color 0.2s;}
+input:focus{border-color:var(--brown);background:#fff;}
+.btn-filter{padding:10px 22px;background:var(--brown);color:#fff;border:none;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.btn-filter:hover{background:#5c2e0f;}
+.dia-fechado-banner{background:linear-gradient(135deg,var(--green),#2d9d64);border-radius:14px;padding:16px 22px;margin-bottom:22px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 16px rgba(31,122,79,0.3);}
+.dfb-icon{font-size:2rem;}.dfb-text{flex:1;}
+.dfb-title{font-family:'Fraunces',serif;font-size:1.1rem;color:#fff;font-weight:700;}
+.dfb-sub{font-size:0.8rem;color:rgba(255,255,255,0.75);margin-top:2px;}
+.mb-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;margin-bottom:22px;overflow:hidden;box-shadow:0 2px 16px rgba(139,69,19,0.08);}
+.mb-header{padding:18px 22px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--brown-light),var(--orange-light));border-bottom:1.5px solid var(--border);}
+.mb-avatar{width:48px;height:48px;background:linear-gradient(135deg,var(--brown),var(--orange));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:1.3rem;color:#fff;font-weight:900;flex-shrink:0;}
+.mb-info{flex:1;}
+.mb-name{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:700;color:var(--brown);}
+.mb-meta{font-size:0.78rem;color:var(--muted);margin-top:3px;font-weight:500;}
+.mb-tel{font-size:0.78rem;color:var(--brown);font-weight:700;margin-top:2px;}
+.pagamento-tag{padding:6px 12px;border-radius:20px;font-size:0.75rem;font-weight:800;display:inline-block;}
+.tag-pago{background:var(--green-bg);color:var(--green);}
+.tag-pendente{background:var(--red-bg);color:var(--red);}
+.orders-table{width:100%;border-collapse:collapse;}
+.orders-table thead tr{background:#FAFAFE;}
+.orders-table th{padding:10px 22px;text-align:left;font-size:0.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border);}
+.orders-table th.r{text-align:right;}
+.orders-table td{padding:13px 22px;font-size:0.88rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+.orders-table tbody tr:hover td{background:#FFFBF5;}
+.td-code{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:900;color:var(--brown);}
+.plat-badge{font-size:0.67rem;padding:3px 10px;border-radius:20px;font-weight:700;display:inline-block;}
+.plat-ifood{background:#fee;color:#c0392b;}.plat-99{background:#fef9e7;color:#b7860a;}.plat-particular{background:var(--green-bg);color:var(--green);}
+.td-addr{color:#555;max-width:260px;font-size:0.85rem;}
+.td-km{font-family:'Fraunces',serif;font-weight:700;color:var(--muted);font-size:1rem;white-space:nowrap;}
+.td-price{font-family:'Fraunces',serif;font-weight:900;color:var(--green);font-size:1.1rem;text-align:right;white-space:nowrap;}
+.btn-del{background:var(--red-bg);color:var(--red);border:1px solid #fecaca;border-radius:8px;padding:5px 10px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;}
+.mb-footer{background:linear-gradient(135deg,#FFF8E7,#FEF3C7);border-top:1.5px solid var(--border);padding:16px 22px;}
+.mb-footer-top{display:flex;align-items:stretch;margin-bottom:14px;}
+.footer-col{flex:1;text-align:center;padding:0 14px;border-right:1px solid var(--border);}
+.footer-col:last-child{border-right:none;}
+.fc-lbl{font-size:0.67rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+.fc-val{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:900;color:var(--brown);}
+.fc-val.big{font-size:1.5rem;color:var(--green);}.fc-val.red{color:var(--red);}
+.fechar-dia-section{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.fds-info{flex:1;}
+.fds-title{font-size:0.85rem;font-weight:700;color:var(--text);}
+.fds-sub{font-size:0.75rem;color:var(--muted);margin-top:2px;}
+.btn-fechar-dia{padding:10px 20px;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.btn-fechar-dia:hover{background:#186040;transform:translateY(-1px);}
+.btn-fechar-dia.reabrir{background:var(--amber);}
+.btn-fechar-dia.reabrir:hover{background:#92400e;}
+.semana-header{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--brown);margin-bottom:14px;font-weight:700;}
+.semana-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px;}
+.dia-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.dia-card:hover{border-color:var(--brown);transform:translateY(-2px);}
+.dia-card.hoje{border-color:var(--brown);background:var(--brown-light);}
+.dia-card.tem-pedidos{border-color:var(--orange);}
+.dia-card.fechado{border-color:var(--green);background:var(--green-bg);}
+.dia-nome{font-size:0.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+.dia-num{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;color:var(--text);line-height:1.1;}
+.dia-card.hoje .dia-num{color:var(--brown);}.dia-card.fechado .dia-num{color:var(--green);}
+.dia-mini{font-size:0.65rem;font-weight:700;color:var(--muted);margin-top:3px;}
+.dia-card.tem-pedidos .dia-mini{color:var(--orange);}.dia-card.fechado .dia-mini{color:var(--green);}
+.dia-total-mini{font-size:0.7rem;font-weight:800;color:var(--brown);margin-top:2px;}
+.dia-fechado-badge{font-size:0.6rem;background:var(--green);color:#fff;border-radius:6px;padding:1px 5px;margin-top:3px;display:inline-block;font-weight:700;}
+.semana-resumo{background:linear-gradient(135deg,var(--brown),#92400e);border-radius:16px;padding:20px 24px;margin-bottom:24px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 4px 20px rgba(139,69,19,0.3);}
+.sr-col{text-align:center;padding:0 12px;border-right:1px solid rgba(255,255,255,0.2);}
+.sr-col:last-child{border-right:none;}
+.sr-lbl{font-size:0.65rem;color:rgba(255,255,255,0.65);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+.sr-val{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;color:#fff;line-height:1;}
+.sr-val.yellow{color:#FDE68A;}
+.historico-list{display:flex;flex-direction:column;gap:14px;}
+.hist-item{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all 0.2s;}
+.hist-item:hover{border-color:var(--brown);transform:translateY(-1px);}
+.hist-item.fechado{border-color:var(--green);background:var(--green-bg);}
+.hist-data{text-align:center;min-width:60px;}
+.hist-dia-num{font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:var(--brown);line-height:1;}
+.hist-item.fechado .hist-dia-num{color:var(--green);}
+.hist-mes{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.hist-sep{width:1px;background:var(--border);align-self:stretch;}
+.hist-info{flex:1;}
+.hist-semana{font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;}
+.hist-pedidos{font-size:0.9rem;font-weight:700;color:var(--text);margin-top:2px;}
+.hist-motoboys{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+.hist-total{text-align:right;}
+.hist-val{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;color:var(--green);}
+.hist-status{margin-top:4px;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-icon{font-size:3rem;margin-bottom:12px;}
+.loading{display:flex;justify-content:center;padding:50px;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--brown);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.modal-overlay{position:fixed;inset:0;background:rgba(45,24,16,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+.modal{background:#fff;border-radius:18px;padding:28px;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(139,69,19,0.25);}
+.modal-title{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--brown);margin-bottom:6px;}
+.modal-sub{font-size:0.83rem;color:var(--muted);margin-bottom:20px;}
+.link-box{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:0.82rem;color:var(--brown);word-break:break-all;margin-bottom:14px;font-family:monospace;}
+.modal-actions{display:flex;gap:10px;}
+.btn-copy{flex:1;padding:11px;background:var(--brown);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.btn-whats{flex:1;padding:11px;background:#25D366;color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.btn-close-modal{padding:11px 16px;background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.modal-pagar{background:#fff;border-radius:18px;padding:28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(139,69,19,0.25);}
+.mp-icon{font-size:2.5rem;text-align:center;margin-bottom:10px;}
+.mp-title{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--green);text-align:center;margin-bottom:4px;}
+.mp-sub{font-size:0.82rem;color:var(--muted);text-align:center;margin-bottom:18px;}
+.mp-diaria-info{background:var(--orange-light);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:0.82rem;color:var(--brown);font-weight:700;text-align:center;}
+.mp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.mp-field label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;display:block;}
+.mp-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.95rem;color:var(--text);background:var(--bg);outline:none;}
+.mp-field input:focus{border-color:var(--green);background:#fff;}
+.mp-field .mp-hint{font-size:0.68rem;color:var(--red);font-weight:600;margin-top:3px;}
+.mp-resumo{background:var(--green-bg);border:1.5px solid #a7f3d0;border-radius:12px;padding:14px;margin-bottom:14px;}
+.mp-linha{display:flex;justify-content:space-between;font-size:0.87rem;padding:3px 0;}
+.mp-linha span:first-child{color:var(--muted);font-weight:600;}
+.mp-linha span:last-child{font-family:'Fraunces',serif;font-weight:900;color:var(--green);}
+.mp-linha.desconto span:last-child{color:var(--red);}
+.mp-total{background:linear-gradient(135deg,var(--green),#2d9d64);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.mp-total span:first-child{font-size:0.85rem;font-weight:700;color:rgba(255,255,255,0.85);}
+.mp-total span:last-child{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;color:#fff;}
+.mp-actions{display:flex;gap:10px;}
+.btn-pagar{flex:1;padding:12px;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer;}
+.btn-cancelar-mp{padding:12px 16px;background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.modal-reabrir{background:#fff;border-radius:18px;padding:28px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(139,69,19,0.25);}
+.mr-icon{font-size:2.5rem;text-align:center;margin-bottom:10px;}
+.mr-title{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--amber);text-align:center;margin-bottom:6px;}
+.mr-sub{font-size:0.82rem;color:var(--muted);text-align:center;margin-bottom:20px;}
+.mr-actions{display:flex;gap:10px;}
+.btn-reabrir{flex:1;padding:12px;background:var(--amber);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer;}
+.btn-cancelar-mr{padding:12px 16px;background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.modal-pos{background:#fff;border-radius:18px;padding:28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(139,69,19,0.25);}
+.pos-icon{font-size:2.5rem;text-align:center;margin-bottom:10px;}
+.pos-title{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--green);text-align:center;margin-bottom:4px;}
+.pos-sub{font-size:0.82rem;color:var(--muted);text-align:center;margin-bottom:20px;}
+.pos-actions{display:flex;flex-direction:column;gap:10px;}
+.btn-pdf{padding:14px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-zap{padding:14px;background:#25D366;color:#fff;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-fechar-pos{padding:12px;background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.senha-modal{background:#fff;border-radius:18px;padding:28px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(139,69,19,0.25);}
+.senha-title{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--red);margin-bottom:6px;}
+.senha-sub{font-size:0.83rem;color:var(--muted);margin-bottom:18px;}
+.senha-erro{color:var(--red);font-size:0.82rem;font-weight:700;margin-bottom:10px;display:none;text-align:center;}
+.senha-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;color:var(--text);outline:none;margin-bottom:14px;text-align:center;letter-spacing:0.1em;}
+.senha-input:focus{border-color:var(--red);}
+.senha-actions{display:flex;gap:10px;}
+.btn-confirmar{flex:1;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer;}
+.btn-cancelar{padding:12px 16px;background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;}
+.hidden{display:none !important;}
+@media(max-width:640px){
+.summary-grid{grid-template-columns:1fr 1fr;}
+.semana-grid{grid-template-columns:repeat(4,1fr);}
+.semana-resumo{grid-template-columns:1fr 1fr;}
+.filter-card{flex-direction:column;}
+.orders-table th:nth-child(3),.orders-table td:nth-child(3){display:none;}
+.header{padding:0 16px;}
+.mb-footer-top{flex-wrap:wrap;}
+.footer-col{min-width:50%;}
+.mp-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo-mark">🍔</div>
+<div>
+<div class="logo-text">Terroir <em>Mineiro</em></div>
+<div class="logo-sub">Painel Administrativo</div>
+</div>
+<div class="header-right">
+<span class="today-date" id="today-label"></span>
+<button class="btn-share" onclick="abrirModal()">📱 Envia Link</button>
+</div>
+</div>
+<div class="main">
+<div class="summary-grid">
+<div class="sum-card"><div class="sum-icon">🛵</div><div class="sum-val orange" id="sum-motoboys">0</div><div class="sum-label">Motoboys Hoje</div></div>
+<div class="sum-card"><div class="sum-icon">📦</div><div class="sum-val" id="sum-pedidos">0</div><div class="sum-label">Pedidos Hoje</div></div>
+<div class="sum-card"><div class="sum-icon">💰</div><div class="sum-val green" id="sum-total">R$ 0</div><div class="sum-label">Total Hoje</div></div>
+<div class="sum-card"><div class="sum-icon">📅</div><div class="sum-val" id="sum-semana">R$ 0</div><div class="sum-label">Total da Semana</div></div>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="mudarTab('hoje')">📋 Pedidos do Dia</button>
+<button class="tab-btn" onclick="mudarTab('semana')">📅 Semana</button>
+<button class="tab-btn" onclick="mudarTab('historico')">📚 Histórico</button>
+</div>
+<div id="tab-hoje" class="tab-content active">
+<div class="filter-card">
+<div class="filter-field">
+<label class="filter-label">Data</label>
+<input type="date" id="filtro-data" onchange="onChangeFiltroData()">
+<div id="diaria-badge-filtro"></div>
+</div>
+<div class="filter-field">
+<label class="filter-label">💵 Diária do Dia (R$) - Editável</label>
+<input type="number" id="valor-diaria-dia" placeholder="Ex: 60.00" step="0.01" min="0">
+</div>
+<div class="filter-field">
+<label class="filter-label">Motoboy</label>
+<input type="text" id="filtro-nome" placeholder="Buscar por nome...">
+</div>
+<button class="btn-filter" onclick="carregar()"> Atualizar</button>
+</div>
+<div id="content"><div class="loading"><div class="spinner"></div></div></div>
+</div>
+<div id="tab-semana" class="tab-content">
+<div class="semana-header"> Esta Semana</div>
+<div class="semana-grid" id="semana-grid"><div class="loading"><div class="spinner"></div></div></div>
+<div class="semana-resumo">
+<div class="sr-col"><div class="sr-lbl">Pedidos</div><div class="sr-val" id="sr-pedidos">0</div></div>
+<div class="sr-col"><div class="sr-lbl">Motoboys</div><div class="sr-val" id="sr-motoboys">0</div></div>
+<div class="sr-col"><div class="sr-lbl">KM Total</div><div class="sr-val" id="sr-km">0</div></div>
+<div class="sr-col"><div class="sr-lbl">Total Semana</div><div class="sr-val yellow" id="sr-total">R$ 0</div></div>
+</div>
+</div>
+<div id="tab-historico" class="tab-content">
+<div class="historico-list" id="historico-list"><div class="loading"><div class="spinner"></div></div></div>
+</div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-link">
+<div class="modal">
+<div class="modal-title"> Link para o Motoboy</div>
+<div class="modal-sub">O motoboy abre no celular e registra as entregas.</div>
+<div class="link-box" id="link-box"></div>
+<div class="modal-actions">
+<button class="btn-copy" onclick="copiarLink()">📋 Copiar</button>
+<button class="btn-whats" onclick="enviarLinkWhatsapp()">💬 WhatsApp</button>
+<button class="btn-close-modal" onclick="fecharModal()">Fechar</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-pagar">
+<div class="modal-pagar">
+<div class="mp-icon"></div>
+<div class="mp-title" id="mp-title">Pagar Motoboy</div>
+<div class="mp-sub" id="mp-sub">Informe os valores e confirme.</div>
+<div id="mp-diaria-info" class="mp-diaria-info"></div>
+<div class="mp-grid">
+<div class="mp-field">
+<label>💵 Diária (R$) - Editável</label>
+<input type="number" id="mp-diaria" placeholder="60.00" step="0.01" min="0" oninput="recalcMP()">
+</div>
+<div class="mp-field">
+<label>🛒 Adiantamento / Compra (R$)</label>
+<input type="number" id="mp-adiantamento" placeholder="0.00" step="0.01" min="0" oninput="recalcMP()">
+<div class="mp-hint">⚠️ Será descontado</div>
+</div>
+</div>
+<div class="mp-resumo" id="mp-resumo"></div>
+<div class="mp-total">
+<span> Total a pagar via PIX</span>
+<span id="mp-total-val">R$ 0,00</span>
+</div>
+<div class="mp-actions">
+<button class="btn-pagar" onclick="confirmarPagamento()">✅ Pagar e Gerar PDF</button>
+<button class="btn-cancelar-mp" onclick="fecharModalPagar()">Cancelar</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-reabrir">
+<div class="modal-reabrir">
+<div class="mr-icon">🔓</div>
+<div class="mr-title" id="mr-title">Reabrir dia?</div>
+<div class="mr-sub">Isso marcará o dia como não pago.</div>
+<div class="mr-actions">
+<button class="btn-reabrir" onclick="confirmarReabrir()">🔓 Confirmar Reabrir</button>
+<button class="btn-cancelar-mr" onclick="fecharModalReabrir()">Cancelar</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-pos">
+<div class="modal-pos">
+<div class="pos-icon">🎉</div>
+<div class="pos-title">Pagamento registrado!</div>
+<div class="pos-sub" id="pos-sub">O que deseja fazer com o comprovante?</div>
+<div class="pos-actions">
+<button class="btn-pdf" onclick="baixarPDF()">📄 Baixar PDF</button>
+<button class="btn-zap" onclick="enviarZap()">💬 Enviar pelo WhatsApp</button>
+<button class="btn-fechar-pos" onclick="fecharModalPos()">Fechar</button>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay hidden" id="modal-senha">
+<div class="senha-modal">
+<div class="senha-title">🔐 Confirmar exclusão</div>
+<div class="senha-sub">Digite a senha para deletar.</div>
+<div class="senha-erro" id="senha-erro">❌ Senha incorreta!</div>
+<input type="password" class="senha-input" id="senha-input" placeholder="••••••••">
+<div class="senha-actions">
+<button class="btn-confirmar" onclick="confirmarDelete()">🗑️ Deletar</button>
+<button class="btn-cancelar" onclick="fecharSenha()">Cancelar</button>
+</div>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+// ══ FIREBASE ══
+const firebaseConfig = {
+  apiKey: "AIzaSyCy0aRcCcPZ9cYDZu_xDESsOehgbbgYSgs",
+  authDomain: "terroir-mineiro.firebaseapp.com",
+  databaseURL: "https://terroir-mineiro-default-rtdb.firebaseio.com",
+  projectId: "terroir-mineiro",
+  storageBucket: "terroir-mineiro.firebasestorage.app",
+  messagingSenderId: "894090371625",
+  appId: "1:894090371625:web:e34e3d7a95188ddf427238"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ══ CONSTANTES ══
+const SENHA = 'terroir123';
+const hoje  = new Date().toLocaleDateString('en-CA');
+const ENDERECO_LOJA = 'Rua Irineu Pinto, 175';
+const DIARIA_FIXA = 60.00; // ← Diária fixa para todos os dias
+
+function fmtR(v)    { return 'R$ '+Number(v).toFixed(2).replace('.',','); }
+function fmtData(d) { return new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
+function nomeDia(d) { return new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short'}); }
+function nomeMes(d) { return new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{month:'short'}); }
+function nomeDiaSemana(data){ return new Date(data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long'}); }
+const platClass = {iFood:'plat-ifood','99':'plat-99',Particular:'plat-particular'};
+
+// ═ DIÁRIA FIXA ══
+function calcularDiaria(data) {
+  return DIARIA_FIXA; // Sempre R$ 60,00
+}
+function infoDiaria(data) {
+  const dia = nomeDiaSemana(data);
+  return {
+    valor: DIARIA_FIXA,
+    label: `📅 ${dia} · Diária fixa: R$ ${DIARIA_FIXA.toFixed(2)} (editável)`,
+    tipo: 'fixa'
+  };
+}
+function onChangeFiltroData() {
+  const data  = document.getElementById('filtro-data').value;
+  const info  = infoDiaria(data);
+  const badge = document.getElementById('diaria-badge-filtro');
+  badge.innerHTML = `<span class="diaria-badge">${info.label}</span>`;
+  document.getElementById('valor-diaria-dia').value = info.valor.toFixed(2);
+}
+
+document.getElementById('filtro-data').value = hoje;
+document.getElementById('today-label').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+onChangeFiltroData();
+
+var _pendingPagar   = null;
+var _pendingReabrir = null;
+var _dadosPDF       = null;
+var _pendingDeleteId = null;
+
+function mudarTab(tab) {
+  ['hoje','semana','historico'].forEach(function(n,i){
+    document.querySelectorAll('.tab-btn')[i].classList.toggle('active',n===tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='semana')   carregarSemana();
+  if(tab==='historico') carregarHistorico();
+}
+
+function abrirModal() {
+  var url = window.location.href.replace('terroir-loja.html','terroir-motoboy.html');
+  document.getElementById('link-box').textContent = url;
+  document.getElementById('modal-link').classList.remove('hidden');
+}
+function fecharModal(){ document.getElementById('modal-link').classList.add('hidden'); }
+function copiarLink(){ navigator.clipboard.writeText(document.getElementById('link-box').textContent).then(function(){ alert('✅ Copiado!'); }); }
+function enviarLinkWhatsapp(){ window.open('https://wa.me/?text='+encodeURIComponent('Registre suas entregas:\n'+document.getElementById('link-box').textContent),'_blank'); }
+
+function abrirModalPagar(motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel) {
+  _pendingPagar = { motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel };
+  const info = infoDiaria(dataSel);
+  const infoEl = document.getElementById('mp-diaria-info');
+  infoEl.textContent = info.label;
+  infoEl.className   = 'mp-diaria-info';
+  document.getElementById('mp-title').textContent = 'Pagar — ' + motoboyNome;
+  document.getElementById('mp-sub').textContent   = fmtData(dataSel) + ' · Confirme a diária e o pagamento.';
+  var diariaFiltro = parseFloat(document.getElementById('valor-diaria-dia').value) || info.valor;
+  document.getElementById('mp-diaria').value       = diariaFiltro.toFixed(2);
+  document.getElementById('mp-adiantamento').value = '';
+  recalcMP();
+  document.getElementById('modal-pagar').classList.remove('hidden');
+}
+function fecharModalPagar(){ document.getElementById('modal-pagar').classList.add('hidden'); }
+function recalcMP() {
+  if(!_pendingPagar) return;
+  var corridas      = _pendingPagar.valorCorridas;
+  var anterior      = _pendingPagar.anterior;
+  var descontoMb    = _pendingPagar.descontoMotoboy || 0;
+  var diaria        = parseFloat(document.getElementById('mp-diaria').value) || 0;
+  var adiantamento  = parseFloat(document.getElementById('mp-adiantamento').value) || 0;
+  var totalDia      = corridas + diaria;
+  var total         = Math.max(0, totalDia + anterior + descontoMb - adiantamento);
+  var html = '<div class="mp-linha"><span>Corridas</span><span>'+fmtR(corridas)+'</span></div>';
+  html += '<div class="mp-linha"><span>+ Diária</span><span>'+fmtR(diaria)+'</span></div>';
+  if(descontoMb<0) html += '<div class="mp-linha desconto"><span>− Desconto (lançado pelo motoboy)</span><span>'+fmtR(descontoMb)+'</span></div>';
+  if(anterior>0) html += '<div class="mp-linha"><span>+ Dívida anterior</span><span>'+fmtR(anterior)+'</span></div>';
+  if(adiantamento>0) html += '<div class="mp-linha desconto"><span>− Adiantamento/Compra</span><span>- '+fmtR(adiantamento)+'</span></div>';
+  document.getElementById('mp-resumo').innerHTML = html;
+  document.getElementById('mp-total-val').textContent = fmtR(total);
+}
+function confirmarPagamento() {
+  if(!_pendingPagar) return;
+  var p             = _pendingPagar;
+  var diaria        = parseFloat(document.getElementById('mp-diaria').value) || 0;
+  var adiantamento  = parseFloat(document.getElementById('mp-adiantamento').value) || 0;
+  var descontoMb    = p.descontoMotoboy || 0;
+  var totalDia      = p.valorCorridas + diaria;
+  var totalFinal    = Math.max(0, totalDia + p.anterior + descontoMb - adiantamento);
+  db.collection('pagamentos').doc(p.motoboyId+'_'+p.dataSel).set({
+    status:'pago', data:p.dataSel, motoboyId:p.motoboyId,
+    diaria, adiantamento,
+    totalCorridas:p.valorCorridas, total:totalDia,
+    atualizadoEm: new Date().toISOString()
+  },{merge:true}).then(function(){
+    fecharModalPagar();
+    _dadosPDF = {
+      motoboyNome:p.motoboyNome, motoboyTel:p.motoboyTel,
+      dataSel:p.dataSel, diaria, adiantamento,
+      valorCorridas:p.valorCorridas, totalDia, anterior:p.anterior, totalFinal,
+      pedidos:p.pedidos||[], qtdPedidos:(p.pedidos||[]).length
+    };
+    document.getElementById('pos-sub').textContent = p.motoboyNome+' — '+fmtR(totalFinal)+' — '+fmtData(p.dataSel);
+    document.getElementById('modal-pos').classList.remove('hidden');
+    carregar();
+    atualizarSummaryTopo();
+  }).catch(function(e){ alert('Erro ao salvar: '+e.message); });
+}
+
+function abrirModalReabrir(motoboyId, motoboyNome, dataSel) {
+  _pendingReabrir = { motoboyId, motoboyNome, dataSel };
+  document.getElementById('mr-title').textContent = 'Reabrir dia — '+motoboyNome+'?';
+  document.getElementById('modal-reabrir').classList.remove('hidden');
+}
+function fecharModalReabrir(){ document.getElementById('modal-reabrir').classList.add('hidden'); }
+function confirmarReabrir() {
+  if(!_pendingReabrir) return;
+  var r = _pendingReabrir;
+  db.collection('pagamentos').doc(r.motoboyId+'_'+r.dataSel).set({
+    status:'pendente', atualizadoEm: new Date().toISOString()
+  },{merge:true}).then(function(){
+    fecharModalReabrir(); carregar(); atualizarSummaryTopo();
+  }).catch(function(e){ alert('Erro: '+e.message); });
+}
+
+function fecharModalPos(){ document.getElementById('modal-pos').classList.add('hidden'); }
+function baixarPDF() {
+  if(!_dadosPDF){ alert('Nenhum dado disponível.'); return; }
+  try {
+    var pdf  = construirPDF(_dadosPDF);
+    var nome = _dadosPDF.motoboyNome.replace(/\s+/g,'_');
+    pdf.save('pagamento_'+nome+'_'+_dadosPDF.dataSel+'.pdf');
+  } catch(err){ alert('ERRO PDF: '+err.message); console.error(err); }
+}
+function enviarZap() {
+  if(!_dadosPDF){ alert('Nenhum dado disponível.'); return; }
+  var d = _dadosPDF;
+  var pdf  = construirPDF(d);
+  var nome = d.motoboyNome.replace(/\s+/g,'_');
+  pdf.save('pagamento_'+nome+'_'+d.dataSel+'.pdf');
+  var msg =
+    '🍔 *Terroir Mineiro — Comprovante de Pagamento*\n'+
+    '👤 *Motoboy:* '+d.motoboyNome+'\n'+
+    '📅 *Data:* '+fmtData(d.dataSel)+'\n'+
+    '📦 *Pedidos:* '+d.qtdPedidos+'\n'+
+    '🛵 *Total corridas:* '+fmtR(d.valorCorridas)+'\n'+
+    '💵 *Diária:* '+fmtR(d.diaria)+'\n'+
+    (d.anterior>0?'⚠️ *Dívida anterior:* '+fmtR(d.anterior)+'\n':'')+
+    (d.adiantamento>0?'🛒 *Adiantamento descontado:* - '+fmtR(d.adiantamento)+'\n':'')+
+    '\n💚 *TOTAL VIA PIX: '+fmtR(d.totalFinal)+'*\n'+
+    '_Terroir Mineiro — '+ENDERECO_LOJA+'_';
+  var tel = d.motoboyTel ? d.motoboyTel.replace(/\D/g,'') : '';
+  var url = tel ? 'https://wa.me/55'+tel+'?text='+encodeURIComponent(msg) : 'https://wa.me/?text='+encodeURIComponent(msg);
+  setTimeout(function(){ window.open(url,'_blank'); }, 800);
+}
+
+function construirPDF(d) {
+  if(!window.jspdf||!window.jspdf.jsPDF) throw new Error('jsPDF não carregou!');
+  var jsPDF = window.jspdf.jsPDF;
+  var pdf   = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  var W     = 210;
+  var brown=[139,69,19],orange=[217,119,6],green=[31,122,79],gray=[100,80,130],white=[255,255,255];
+  var dataFmt = new Date(d.dataSel+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  pdf.setFillColor(brown[0],brown[1],brown[2]); pdf.rect(0,0,W,42,'F');
+  pdf.setFontSize(24); pdf.setFont('helvetica','bold'); pdf.setTextColor(255,255,255);
+  pdf.text('Terroir Mineiro',14,18);
+  pdf.setFontSize(10); pdf.setFont('helvetica','normal'); pdf.setTextColor(253,227,167);
+  pdf.text('Comprovante de Pagamento',14,27);
+  pdf.setFontSize(8.5); pdf.setTextColor(210,190,230);
+  pdf.text(ENDERECO_LOJA,14,34);
+  pdf.setFontSize(8.5); pdf.setTextColor(255,255,255);
+  pdf.text(dataFmt,W-14,26,{align:'right'});
+  pdf.text('Emitido por: Admin',W-14,33,{align:'right'});
+  var y=54;
+  pdf.setFillColor(245,230,211); pdf.roundedRect(14,y-6,W-28,30,4,4,'F');
+  pdf.setFontSize(13); pdf.setFont('helvetica','bold'); pdf.setTextColor(brown[0],brown[1],brown[2]);
+  pdf.text('Motoboy: '+d.motoboyNome,20,y+4);
+  pdf.setFontSize(9); pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+  if(d.motoboyTel) pdf.text('Telefone: '+d.motoboyTel,20,y+13);
+  pdf.text('Data: '+dataFmt,20,y+20);
+  var rows=(d.pedidos||[]).map(function(p,i){
+    return [String(i+1),'#'+p.codigo,p.plataforma,
+    p.endereco.length>42?p.endereco.substring(0,42)+'...':p.endereco,
+    Number(p.km).toFixed(1)+' km',
+    'R$ '+Number(p.valor).toFixed(2).replace('.',',')];
+  });
+  pdf.setFontSize(10); pdf.setFont('helvetica','bold'); pdf.setTextColor(brown[0],brown[1],brown[2]);
+  pdf.text('Detalhamento das Entregas',14,96);
+  pdf.autoTable({
+    startY:100,
+    head:[['','Pedido','Plataforma','Endereço','KM','Valor']],
+    body: rows.length>0 ? rows : [['—','—','—','Nenhum pedido','—','—']],
+    theme:'grid',
+    headStyles:{fillColor:brown,textColor:white,fontStyle:'bold',fontSize:9,halign:'center'},
+    bodyStyles:{fontSize:8.5,textColor:[45,24,16]},
+    alternateRowStyles:{fillColor:[255,248,231]},
+    columnStyles:{0:{halign:'center',cellWidth:8},1:{halign:'center',cellWidth:20},2:{halign:'center',cellWidth:24},3:{cellWidth:82},4:{halign:'center',cellWidth:16},5:{halign:'right',cellWidth:24,fontStyle:'bold',textColor:green}},
+    margin:{left:14,right:14}
+  });
+  var fy=pdf.lastAutoTable.finalY+10;
+  pdf.setFillColor(245,230,211); pdf.roundedRect(14,fy,W-28,66,5,5,'F');
+  pdf.setFontSize(10); pdf.setFont('helvetica','bold'); pdf.setTextColor(brown[0],brown[1],brown[2]);
+  pdf.text('Resumo do Pagamento',20,fy+10);
+  var lx=20,rx=W-20,ly=fy+22;
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+  pdf.text('Total das corridas:',lx,ly);
+  pdf.setFont('helvetica','bold'); pdf.setTextColor(green[0],green[1],green[2]);
+  pdf.text('R$ '+Number(d.valorCorridas).toFixed(2).replace('.',','),rx,ly,{align:'right'}); ly+=9;
+  pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+  pdf.text('Diaria do dia:',lx,ly);
+  pdf.setFont('helvetica','bold'); pdf.setTextColor(green[0],green[1],green[2]);
+  pdf.text('R$ '+Number(d.diaria).toFixed(2).replace('.',','),rx,ly,{align:'right'}); ly+=9;
+  if(d.anterior>0){
+    pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+    pdf.text('Divida anterior:',lx,ly);
+    pdf.setFont('helvetica','bold'); pdf.setTextColor(192,57,43);
+    pdf.text('R$ '+Number(d.anterior).toFixed(2).replace('.',','),rx,ly,{align:'right'}); ly+=9;
+  }
+  if(d.adiantamento>0){
+    pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+    pdf.text('(-) Adiantamento/Compra:',lx,ly);
+    pdf.setFont('helvetica','bold'); pdf.setTextColor(192,57,43);
+    pdf.text('- R$ '+Number(d.adiantamento).toFixed(2).replace('.',','),rx,ly,{align:'right'}); ly+=9;
+  }
+  pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+  pdf.text('Quantidade de pedidos:',lx,ly);
+  pdf.setFont('helvetica','bold'); pdf.setTextColor(brown[0],brown[1],brown[2]);
+  pdf.text(String(d.qtdPedidos)+' pedidos',rx,ly,{align:'right'}); ly+=9;
+  pdf.setDrawColor(orange[0],orange[1],orange[2]); pdf.setLineWidth(0.6);
+  pdf.line(20,ly,W-20,ly); ly+=2;
+  pdf.setFillColor(orange[0],orange[1],orange[2]); pdf.roundedRect(14,ly,W-28,22,4,4,'F');
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(11); pdf.setTextColor(255,255,255);
+  pdf.text('TOTAL PAGO VIA PIX',lx,ly+13);
+  pdf.setFontSize(15);
+  pdf.text('R$ '+Number(d.totalFinal).toFixed(2).replace('.',','),rx,ly+13,{align:'right'});
+  var foot=ly+30;
+  pdf.setFontSize(7.5); pdf.setFont('helvetica','normal'); pdf.setTextColor(gray[0],gray[1],gray[2]);
+  pdf.text('Comprovante gerado pelo sistema Terroir Mineiro',W/2,foot,{align:'center'});
+  pdf.text('Emitido em: '+new Date().toLocaleString('pt-BR'),W/2,foot+5,{align:'center'});
+  return pdf;
+}
+
+function carregar() {
+  var dataSel     = document.getElementById('filtro-data').value || hoje;
+  var filtroNome  = document.getElementById('filtro-nome').value.toLowerCase().trim();
+  var diariaFiltro = parseFloat(document.getElementById('valor-diaria-dia').value) || calcularDiaria(dataSel);
+  var cont        = document.getElementById('content');
+  cont.innerHTML  = '<div class="loading"><div class="spinner"></div></div>';
+  Promise.all([
+    db.collection('pedidos').where('data','==',dataSel).get(),
+    db.collection('pagamentos').where('data','==',dataSel).get(),
+    db.collection('pagamentos').where('status','==','pendente').get(),
+    db.collection('pedidos').get(),
+    db.collection('motoboys').get()
+  ]).then(function(results) {
+    var snapPed=results[0], snapPgtoDia=results[1], snapPgtosAbertos=results[2],
+    snapTodos=results[3], snapMbs=results[4];
+    var telMap = {};
+    snapMbs.forEach(function(d){
+      var m = d.data();
+      telMap[m.id || d.id] = m.tel || '';
+    });
+    snapPed.forEach(function(d){
+      var p = d.data();
+      if(p.motoboyTel && !telMap[p.motoboyId]) telMap[p.motoboyId] = p.motoboyTel;
+    });
+    var pgtosDia = {};
+    snapPgtoDia.forEach(function(d){
+      var p=d.data(); pgtosDia[p.motoboyId]={status:p.status,diaria:p.diaria||0,adiantamento:p.adiantamento||0};
+    });
+    var pendentes=[]; snapPgtosAbertos.forEach(function(d){ pendentes.push(d.data()); });
+    var dividas={};
+    snapTodos.forEach(function(docPed){
+      var ped=docPed.data();
+      if(ped.data!==dataSel){
+        var pend=pendentes.find(function(pg){ return pg.motoboyId===ped.motoboyId&&pg.data===ped.data; });
+        if(pend) dividas[ped.motoboyId]=(dividas[ped.motoboyId]||0)+ped.valor;
+      }
+    });
+    var grupos={};
+    snapPed.forEach(function(d){
+      var p=d.data(); p.firebaseId=d.id;
+      if(filtroNome && !p.motoboyNome.toLowerCase().includes(filtroNome)) return;
+      if(!grupos[p.motoboyId]) grupos[p.motoboyId]={nome:p.motoboyNome,pedidos:[]};
+      grupos[p.motoboyId].pedidos.push(p);
+    });
+    var ids=Object.keys(grupos);
+    if(ids.length===0){
+      cont.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div>Nenhum pedido em '+fmtData(dataSel)+'.</div>';
+      atualizarSummary(0,0,0); return;
+    }
+    var tMb=ids.length, tPed=0, tGeral=0;
+    var todosPagos=ids.every(function(id){ return pgtosDia[id]&&pgtosDia[id].status==='pago'; });
+    var banner = todosPagos
+    ? '<div class="dia-fechado-banner"><div class="dfb-icon">🎉</div><div class="dfb-text"><div class="dfb-title">Dia fechado! Todos os motoboys foram pagos.</div><div class="dfb-sub">'+fmtData(dataSel)+' · '+ids.length+' motoboy(s)</div></div></div>'
+    : '';
+    var html=banner;
+    ids.forEach(function(id){
+      var g    = grupos[id];
+      var pgto = pgtosDia[id]||{status:'pendente',diaria:0,adiantamento:0};
+      var status        = pgto.status;
+      var adiantJaSalvo = pgto.adiantamento||0;
+      var corridas = g.pedidos
+        .filter(function(p){ return p.plataforma !== 'Diária' && p.plataforma !== 'Adiantamento'; })
+        .reduce(function(s,p){ return s+p.valor; },0);
+      var diariaMotoboy = g.pedidos
+        .filter(function(p){ return p.plataforma === 'Diária'; })
+        .reduce(function(s,p){ return s+p.valor; },0);
+      var diariaJaSalva = diariaMotoboy > 0
+        ? diariaMotoboy
+        : (pgto.status==='pago' ? (pgto.diaria||0) : diariaFiltro);
+      var adiantMotoboy = g.pedidos
+        .filter(function(p){ return p.plataforma === 'Adiantamento'; })
+        .reduce(function(s,p){ return s+p.valor; },0);
+      var totalDia   = corridas + diariaJaSalva;
+      var anterior   = dividas[id]||0;
+      var totalFinal = Math.max(0, totalDia + anterior + adiantMotoboy - adiantJaSalvo);
+      var tel        = telMap[id]||'';
+      var qtdCorridas = g.pedidos.filter(function(p){ return p.plataforma !== 'Diária' && p.plataforma !== 'Adiantamento'; }).length;
+      tPed += qtdCorridas; tGeral += totalDia;
+      var pedsSerial = JSON.stringify(g.pedidos
+        .filter(function(p){ return p.plataforma !== 'Diária' && p.plataforma !== 'Adiantamento'; })
+        .map(function(p){ return {codigo:p.codigo,plataforma:p.plataforma,endereco:p.endereco,km:p.km,valor:p.valor}; })
+      ).replace(/'/g,"\\'");
+      html += '<div class="mb-card">';
+      html += '<div class="mb-header">';
+      html += '<div class="mb-avatar">'+g.nome.charAt(0).toUpperCase()+'</div>';
+      html += '<div class="mb-info">';
+      html += '<div class="mb-name">🛵 '+g.nome+'</div>';
+      html += '<div class="mb-meta">'+g.pedidos.length+' pedido(s) · '+fmtData(dataSel)+'</div>';
+      if(tel) html += '<div class="mb-tel">📱 '+tel+'</div>';
+      html += '</div>';
+      html += '<span class="pagamento-tag '+(status==='pago'?'tag-pago':'tag-pendente')+'">'+(status==='pago'?'✅ PAGO':' PENDENTE')+'</span>';
+      html += '</div>';
+      html += '<table class="orders-table"><thead><tr><th>Pedido</th><th>Plataforma</th><th>Endereço</th><th>KM</th><th class="r">Valor</th><th></th></tr></thead><tbody>';
+      g.pedidos.forEach(function(p){
+        html += '<tr>';
+        html += '<td class="td-code">#'+p.codigo+'</td>';
+        html += '<td><span class="plat-badge '+(platClass[p.plataforma]||'')+'">'+p.plataforma+'</span></td>';
+        html += '<td class="td-addr">'+p.endereco+'</td>';
+        html += '<td class="td-km">'+p.km+' km</td>';
+        html += '<td class="td-price">'+fmtR(p.valor)+'</td>';
+        html += '<td><button class="btn-del" onclick="solicitarDelete(\''+p.firebaseId+'\')">🗑️</button></td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      html += '<div class="mb-footer"><div class="mb-footer-top">';
+      html += '<div class="footer-col"><div class="fc-lbl">Corridas</div><div class="fc-val">'+fmtR(corridas)+'</div></div>';
+      html += '<div class="footer-col"><div class="fc-lbl">Diária</div><div class="fc-val">'+fmtR(diariaJaSalva)+'</div></div>';
+      if(adiantMotoboy<0) html += '<div class="footer-col"><div class="fc-lbl">Desconto</div><div class="fc-val red">'+fmtR(adiantMotoboy)+'</div></div>';
+      if(adiantJaSalvo>0) html += '<div class="footer-col"><div class="fc-lbl">Adiant. Desc.</div><div class="fc-val red">-'+fmtR(adiantJaSalvo)+'</div></div>';
+      html += '<div class="footer-col"><div class="fc-lbl">Dívida Ant.</div><div class="fc-val red">'+fmtR(anterior)+'</div></div>';
+      html += '<div class="footer-col"><div class="fc-lbl">Total Final</div><div class="fc-val big">'+fmtR(totalFinal)+'</div></div>';
+      html += '</div>';
+      html += '<div class="fechar-dia-section"><div class="fds-info">';
+      if(status==='pago'){
+        html += '<div class="fds-title">✅ Dia fechado e pago</div>';
+        html += '<div class="fds-sub">Clique em Reabrir para corrigir.</div>';
+        html += '</div><button class="btn-fechar-dia reabrir" onclick="abrirModalReabrir(\''+id+'\',\''+g.nome.replace(/'/g,"\\'")+'\',\''+dataSel+'\')">🔓 Reabrir Dia</button>';
+      } else {
+        html += '<div class="fds-title">💳 Pagar e fechar o dia</div>';
+        html += '<div class="fds-sub">Confirme a diária e o pagamento.</div>';
+        html += '</div><button class="btn-fechar-dia" onclick="abrirModalPagarComPedidos(\''+id+'\',\''+g.nome.replace(/'/g,"\\'")+'\',\''+tel+'\','+corridas+','+anterior+',\''+dataSel+'\',\''+encodeURIComponent(pedsSerial)+'\','+adiantMotoboy+')">💰 Pagar e Gerar PDF</button>';
+      }
+      html += '</div></div></div>';
+    });
+    cont.innerHTML = html;
+    atualizarSummary(tMb, tPed, tGeral);
+  }).catch(function(e){ console.error(e); cont.innerHTML='<div class="empty-state">Erro ao carregar.</div>'; });
+}
+function abrirModalPagarComPedidos(motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel, pedsEncoded, descontoMotoboy) {
+  var pedidos = JSON.parse(decodeURIComponent(pedsEncoded));
+  abrirModalPagar(motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel);
+  _pendingPagar.pedidos = pedidos;
+  _pendingPagar.descontoMotoboy = descontoMotoboy || 0;
+  recalcMP();
+}
+function atualizarSummary(mb, ped, total) {
+  document.getElementById('sum-motoboys').textContent = mb;
+  document.getElementById('sum-pedidos').textContent  = ped;
+  document.getElementById('sum-total').textContent    = fmtR(total);
+}
+function atualizarSummaryTopo() {
+  db.collection('pedidos').where('data','==',hoje).get().then(function(snap){
+    var ped=0,total=0; var mbs=new Set();
+    snap.forEach(function(d){ var p=d.data(); ped++; total+=p.valor; mbs.add(p.motoboyId); });
+    document.getElementById('sum-motoboys').textContent = mbs.size;
+    document.getElementById('sum-pedidos').textContent  = ped;
+    document.getElementById('sum-total').textContent    = fmtR(total);
+  });
+  var dias=getDatasSemana(), totalSem=0;
+  Promise.all(dias.map(function(d){ return db.collection('pedidos').where('data','==',d).get().then(function(s){ s.forEach(function(doc){ totalSem+=doc.data().valor; }); }); }))
+  .then(function(){ document.getElementById('sum-semana').textContent=fmtR(totalSem); });
+}
+function getDatasSemana(){
+  var now=new Date(), dow=now.getDay();
+  var seg=new Date(now); seg.setDate(now.getDate()-(dow===0?6:dow-1));
+  var dias=[];
+  for(var i=0;i<7;i++){ var d=new Date(seg); d.setDate(seg.getDate()+i); dias.push(d.toLocaleDateString('en-CA')); }
+  return dias;
+}
+function carregarSemana(){
+  var dias=getDatasSemana();
+  document.getElementById('semana-grid').innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  Promise.all([
+    db.collection('pedidos').where('data','in',dias).get(),
+    db.collection('pagamentos').where('data','in',dias).get()
+  ]).then(function(res){
+    var pedPorDia={}; dias.forEach(function(d){ pedPorDia[d]=[]; });
+    var pgtosPorDia={};
+    res[0].forEach(function(d){ var p=d.data(); if(pedPorDia[p.data]) pedPorDia[p.data].push(p); });
+    res[1].forEach(function(d){ var p=d.data(); if(!pgtosPorDia[p.data]) pgtosPorDia[p.data]={}; pgtosPorDia[p.data][p.motoboyId]=p.status; });
+    var tPed=0,tKm=0,tTotal=0; var mbsSem=new Set();
+    var gridHtml=dias.map(function(d){
+      var peds=pedPorDia[d],total=peds.reduce(function(s,p){ return s+p.valor; },0);
+      var km=peds.reduce(function(s,p){ return s+(Number(p.km)||0); },0);
+      var mbs=new Set(peds.map(function(p){ return p.motoboyId; }));
+      var pgtos=pgtosPorDia[d]||{};
+      var mbIds=[...mbs]; var fechado=mbIds.length>0&&mbIds.every(function(id){ return pgtos[id]==='pago'; });
+      tPed+=peds.length; tKm+=km; tTotal+=total; mbs.forEach(function(id){ mbsSem.add(id); });
+      var cls='dia-card'+(d===hoje?' hoje':'')+(peds.length>0&&!fechado?' tem-pedidos':'')+(fechado?' fechado':'');
+      var diariaDia = calcularDiaria(d);
+      return '<div class="'+cls+'" onclick="verDia(\''+d+'\')">'+
+      '<div class="dia-nome">'+nomeDia(d)+'</div>'+
+      '<div class="dia-num">'+new Date(d+'T12:00:00').getDate()+'</div>'+
+      '<div class="dia-mini">'+(peds.length>0?peds.length+' ped.':'·')+'</div>'+
+      (total>0?'<div class="dia-total-mini">'+fmtR(total)+'</div>':'')+
+      '<div style="font-size:0.6rem;color:var(--muted);margin-top:2px;">💵 R$'+diariaDia.toFixed(2)+'</div>'+
+      (fechado?'<div class="dia-fechado-badge">✅</div>':'')+
+      '</div>';
+    }).join('');
+    document.getElementById('semana-grid').innerHTML=gridHtml;
+    document.getElementById('sr-pedidos').textContent=tPed;
+    document.getElementById('sr-motoboys').textContent=mbsSem.size;
+    document.getElementById('sr-km').textContent=tKm.toFixed(1)+' km';
+    document.getElementById('sr-total').textContent=fmtR(tTotal);
+    document.getElementById('sum-semana').textContent=fmtR(tTotal);
+  });
+}
+function verDia(data){ document.getElementById('filtro-data').value=data; onChangeFiltroData(); mudarTab('hoje'); setTimeout(carregar,100); }
+function carregarHistorico(){
+  var lista=document.getElementById('historico-list');
+  lista.innerHTML='<div class="loading"><div class="spinner"></div></div>';
+  Promise.all([db.collection('pedidos').get(), db.collection('pagamentos').get()]).then(function(res){
+    var diasMap={};
+    res[0].forEach(function(d){ var p=d.data(); if(!diasMap[p.data]) diasMap[p.data]={pedidos:[],total:0,km:0,mbs:new Set()}; diasMap[p.data].pedidos.push(p); diasMap[p.data].total+=p.valor; diasMap[p.data].km+=Number(p.km)||0; diasMap[p.data].mbs.add(p.motoboyId); });
+    var pgtosPorDia={};
+    res[1].forEach(function(d){ var p=d.data(); if(!pgtosPorDia[p.data]) pgtosPorDia[p.data]={}; pgtosPorDia[p.data][p.motoboyId]=p.status; });
+    var dias=Object.keys(diasMap).sort(function(a,b){ return b.localeCompare(a); });
+    if(dias.length===0){ lista.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div>Nenhum histórico.</div>'; return; }
+    lista.innerHTML=dias.map(function(d){
+      var info=diasMap[d], pgtos=pgtosPorDia[d]||{}, ids=[...info.mbs];
+      var fechado=ids.length>0&&ids.every(function(id){ return pgtos[id]==='pago'; });
+      var algum=ids.some(function(id){ return pgtos[id]==='pago'; });
+      var dt=new Date(d+'T12:00:00');
+      var diariaDia = calcularDiaria(d);
+      return '<div class="hist-item'+(fechado?' fechado':'')+'" onclick="verDia(\''+d+'\')">'+
+      '<div class="hist-data"><div class="hist-dia-num">'+dt.getDate()+'</div><div class="hist-mes">'+nomeMes(d)+'</div></div>'+
+      '<div class="hist-sep"></div>'+
+      '<div class="hist-info"><div class="hist-semana">'+dt.toLocaleDateString('pt-BR',{weekday:'long'})+'</div>'+
+      '<div class="hist-pedidos">'+info.pedidos.length+' pedido'+(info.pedidos.length>1?'s':'')+' · '+info.km.toFixed(1)+' km</div>'+
+      '<div class="hist-motoboys">🛵 '+ids.length+' motoboy'+(ids.length>1?'s':'')+' · 💵 Diária: R$ '+diariaDia.toFixed(2)+'</div></div>'+
+      '<div class="hist-total"><div class="hist-val">'+fmtR(info.total)+'</div>'+
+      '<div class="hist-status"><span class="pagamento-tag '+(fechado?'tag-pago':'tag-pendente')+'">'+(fechado?'✅ FECHADO':algum?'⚠️ PARCIAL':'⏳ ABERTO')+'</span></div></div>'+
+      '</div>';
+    }).join('');
+  });
+}
+function solicitarDelete(id){ _pendingDeleteId=id; document.getElementById('senha-input').value=''; document.getElementById('senha-erro').style.display='none'; document.getElementById('modal-senha').classList.remove('hidden'); }
+function fecharSenha(){ document.getElementById('modal-senha').classList.add('hidden'); }
+function confirmarDelete(){
+  if(document.getElementById('senha-input').value!==SENHA){ document.getElementById('senha-erro').style.display='block'; return; }
+  db.collection('pedidos').doc(_pendingDeleteId).delete().then(function(){ fecharSenha(); carregar(); });
+}
+carregar();
+atualizarSummaryTopo();
+</script>
+</body>
+</html>

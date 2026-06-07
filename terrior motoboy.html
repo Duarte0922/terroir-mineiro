@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terroir Mineiro · Registro de Entregas</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF8E7; --surface: #FFFFFF; --border: #E8D5B5;
+  --brown: #8B4513; --brown-light: #F5E6D3;
+  --orange: #D97706; --orange-light: #FEF3C7;
+  --muted: #9B8B7A; --green: #1F7A4F; --green-bg: #E4F5EC;
+  --text: #2D1810; --red: #C0392B; --red-bg: #FEE2E2; --blue: #2563eb;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+
+.header { background: linear-gradient(135deg, var(--brown), #6b3410); padding: 0 20px; height: 62px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(139,69,19,0.3); }
+.logo-mark { width: 40px; height: 40px; background: var(--orange); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.logo-text { font-family: 'Fraunces', serif; font-size: 1.15rem; color: #fff; line-height: 1; }
+.logo-text em { color: #FDE68A; font-style: italic; }
+.logo-sub { font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-top: 2px; font-weight: 600; }
+
+.main { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+.welcome-card { background: linear-gradient(135deg, var(--brown-light), var(--orange-light)); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: center; }
+.welcome-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.welcome-title { font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--brown); margin-bottom: 4px; }
+.welcome-sub { font-size: 0.85rem; color: var(--muted); }
+.btn-trocar { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: 0.75rem; color: var(--muted); cursor: pointer; margin-top: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
+.btn-trocar:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+
+.date-selector { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
+.date-selector label { font-size: 0.85rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.date-selector input { flex: 1; padding: 10px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; }
+.date-selector input:focus { border-color: var(--brown); }
+
+.form-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.form-title { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--brown); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block; }
+.form-input, .form-select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--bg); outline: none; transition: border-color 0.2s; }
+.form-input:focus, .form-select:focus { border-color: var(--brown); background: #fff; }
+.form-input[readonly] { background: #f0f0f0; cursor: not-allowed; }
+.form-hint { font-size: 0.75rem; color: var(--blue); margin-top: 4px; font-weight: 600; }
+
+.btn-primary { width: 100%; padding: 14px; background: var(--green); color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+.btn-primary:hover { background: #186040; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.btn-secondary { width: 100%; padding: 14px; background: var(--orange); color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+.btn-secondary:hover { background: #b45309; transform: translateY(-1px); }
+.btn-secondary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.status-bar { background: #eff6ff; border: 1.5px solid #3b82f6; border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.82rem; color: #1e40af; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.status-bar.erro { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.status-bar.ok { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+
+.diaria-auto-info { background: var(--orange-light); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 14px; font-size: 0.85rem; color: var(--brown); text-align: center; font-weight: 600; }
+
+.pedido-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.pedido-info { flex: 1; }
+.pedido-codigo { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 900; color: var(--brown); margin-bottom: 4px; }
+.pedido-meta { font-size: 0.8rem; color: var(--muted); }
+.pedido-valor { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 900; color: var(--green); text-align: right; }
+.pedido-valor.negativo { color: var(--red); }
+.btn-del { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 6px; border-radius: 6px; color: #c0392b; opacity: 0.5; transition: all 0.15s; }
+.btn-del:hover { background: #fee2e2; opacity: 1; }
+
+.acoes-hoje { display: flex; gap: 10px; margin-top: 16px; }
+.btn-acao { flex: 1; padding: 13px; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: all 0.2s; }
+.btn-acao-pdf { background: linear-gradient(135deg, #c0392b, #e74c3c); color: #fff; }
+.btn-acao-pdf:hover { background: #a93226; transform: translateY(-1px); }
+.btn-acao-wpp { background: linear-gradient(135deg, #25d366, #128c7e); color: #fff; }
+.btn-acao-wpp:hover { background: #1aab55; transform: translateY(-1px); }
+
+.total-card { background: linear-gradient(135deg, var(--brown), #6b3410); border-radius: 16px; padding: 20px; text-align: center; color: #fff; margin-top: 20px; }
+.total-label { font-size: 0.85rem; opacity: 0.9; margin-bottom: 6px; }
+.total-valor { font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 900; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(45,24,16,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal-login { background: #fff; border-radius: 18px; padding: 30px; max-width: 400px; width: 100%; box-shadow: 0 20px 60px rgba(139,69,19,0.3); }
+.modal-login-title { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--brown); text-align: center; margin-bottom: 8px; }
+.modal-login-sub { font-size: 0.9rem; color: var(--muted); text-align: center; margin-bottom: 24px; }
+.btn-login { width: 100%; padding: 14px; background: var(--brown); color: #fff; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; margin-top: 20px; }
+.btn-login:hover { background: #6b3410; }
+
+.badge-novo { font-size: 0.62rem; background: var(--orange-light); color: var(--brown); border-radius: 6px; padding: 1px 6px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+
+.hidden { display: none !important; }
+.loading-msg { text-align: center; color: var(--muted); padding: 20px; font-size: 0.9rem; }
+.spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-mark">🍔</div>
+  <div>
+    <div class="logo-text">Terroir <em>Mineiro</em></div>
+    <div class="logo-sub">Hamburgueria · Registro de Entregas</div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal-login">
+    <div class="modal-login-title">🛵 Identifique-se</div>
+    <div class="modal-login-sub">Informe seus dados para continuar</div>
+    <div class="form-group">
+      <label class="form-label">Nome Completo</label>
+      <input type="text" id="login-nome" class="form-input" placeholder="Seu nome completo">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Telefone (com DDD)</label>
+      <input type="tel" id="login-tel" class="form-input" placeholder="(31) 99999-9999">
+    </div>
+    <div id="login-erro" class="status-bar erro hidden">⚠️ Preencha nome e telefone!</div>
+    <button class="btn-login" onclick="fazerLogin()">✅ Entrar</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="welcome-card">
+    <div class="welcome-icon">🛵</div>
+    <div class="welcome-title">Olá, <span id="nome-motoboy">Motoboy</span>!</div>
+    <div class="welcome-sub" id="tel-motoboy"></div>
+    <button class="btn-trocar" onclick="trocarUsuario()">🔄 Trocar usuário</button>
+  </div>
+
+  <div id="status-conexao" class="status-bar">🔄 Conectando ao Firebase...</div>
+
+  <div class="date-selector">
+    <label>📅 Data:</label>
+    <input type="date" id="data-selecionada" onchange="trocarData()">
+  </div>
+
+  <!-- FORM PEDIDO -->
+  <div class="form-card">
+    <div class="form-title">📋 Adicionar Pedido</div>
+    <div class="form-group">
+      <label class="form-label">Código do Pedido</label>
+      <input type="text" id="codigo" class="form-input" placeholder="Ex: 1234 (iFood) ou 'particular'" oninput="detectarPlataforma(this.value)">
+      <div class="form-hint">💡 4 dígitos = iFood · "particular" = Particular</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Plataforma</label>
+      <select id="plataforma" class="form-select">
+        <option value="iFood" selected>iFood</option>
+        <option value="Particular">Particular (entrega própria)</option>
+      </select>
+    </div>
+
+    <!-- CAMPO ENDEREÇO COM AUTOCOMPLETE + APRENDIZADO -->
+    <div class="form-group" style="position:relative;">
+      <label class="form-label">Endereço / Bairro de Entrega</label>
+      <input type="text" id="endereco" class="form-input"
+        placeholder="Digite o bairro ou endereço..."
+        autocomplete="off"
+        oninput="filtrarBairros(this.value)"
+        onblur="fecharSugestoes()">
+      <div id="sugestoes-bairro" style="
+        position:absolute; z-index:999; background:#fff;
+        border:1.5px solid #E8D5B5; border-radius:10px;
+        width:100%; max-height:200px; overflow-y:auto;
+        display:none; box-shadow:0 4px 12px rgba(139,69,19,0.15);
+        top:100%; left:0;
+      "></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">KM Rodados</label>
+      <input type="number" id="km" class="form-input" placeholder="0.0" step="0.1" oninput="calcularValor()">
+      <div class="form-hint">💡 0-6km = R$ 5,00 · Acima = R$ 1,00/km</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Valor da Corrida (R$) — calculado automaticamente</label>
+      <input type="number" id="valor" class="form-input" placeholder="0.00" step="0.01" readonly>
+    </div>
+    <button class="btn-primary" id="btn-add-pedido" onclick="adicionarPedido()">➕ Adicionar Pedido</button>
+  </div>
+
+  <!-- FORM DIÁRIA -->
+  <div class="form-card">
+    <div class="form-title">💵 Diária do Dia</div>
+    <div id="diaria-info-auto" class="diaria-auto-info">💡 Diária fixa: R$ 60,00 (editável)</div>
+    <div class="form-group">
+      <label class="form-label">Valor da Diária (R$) — opcional</label>
+      <input type="number" id="diaria-valor" class="form-input" placeholder="60.00" step="0.01">
+      <div class="form-hint">💡 Se deixar vazio, usa R$ 60,00 automaticamente</div>
+    </div>
+    <button class="btn-primary" id="btn-add-diaria" onclick="adicionarDiaria()">➕ Adicionar Diária</button>
+  </div>
+
+  <!-- FORM ADIANTAMENTO -->
+  <div class="form-card">
+    <div class="form-title">💰 Adiantamento / Compra</div>
+    <div class="form-group">
+      <label class="form-label">Valor (R$)</label>
+      <input type="number" id="adiant-valor" class="form-input" placeholder="0.00" step="0.01">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição</label>
+      <input type="text" id="adiant-desc" class="form-input" placeholder="Ex: Gasolina, Almoço">
+    </div>
+    <button class="btn-secondary" id="btn-add-adiant" onclick="adicionarAdiantamento()">➕ Adicionar</button>
+  </div>
+
+  <!-- LISTA DE PEDIDOS -->
+  <div class="form-card">
+    <div class="form-title">📦 Pedidos do Dia</div>
+    <div id="status-lista" class="loading-msg"><span class="spinner"></span>Carregando pedidos...</div>
+    <div id="pedidos-list"></div>
+    <div id="empty-state" class="hidden" style="text-align:center;color:var(--muted);padding:20px;">Nenhum pedido nesta data</div>
+  </div>
+
+  <div class="total-card hidden" id="total-card">
+    <div class="total-label">💰 Total do Dia</div>
+    <div class="total-valor" id="total-valor">R$ 0,00</div>
+  </div>
+
+  <div class="acoes-hoje hidden" id="acoes-hoje">
+    <button class="btn-acao btn-acao-pdf" onclick="gerarPDFHoje()">📄 Salvar PDF</button>
+    <button class="btn-acao btn-acao-wpp" onclick="enviarWhatsAppHoje()">📲 WhatsApp</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+// ══ FIREBASE ══
+const firebaseConfig = {
+  apiKey: "AIzaSyCy0aRcCcPZ9cYDZu_xDESsOehgbbgYSgs",
+  authDomain: "terroir-mineiro.firebaseapp.com",
+  databaseURL: "https://terroir-mineiro-default-rtdb.firebaseio.com",
+  projectId: "terroir-mineiro",
+  storageBucket: "terroir-mineiro.firebasestorage.app",
+  messagingSenderId: "894090371625",
+  appId: "1:894090371625:web:e34e3d7a95188ddf427238"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ══ ESTADO ══
+let pedidos         = [];
+let motoboyInfo     = null;
+let unsubscribeSnap = null;
+const dataHoje      = new Date().toLocaleDateString('en-CA');
+const DIARIA_FIXA   = 60.00;
+
+// ══ ARMAZENAMENTO ══
+function salvarSessao(nome, tel, id) {
+  try { sessionStorage.setItem('mb_nome', nome); sessionStorage.setItem('mb_tel', tel); sessionStorage.setItem('mb_id', id); } catch(e) {}
+}
+function carregarSessao() {
+  try {
+    const nome = sessionStorage.getItem('mb_nome');
+    const tel  = sessionStorage.getItem('mb_tel');
+    const id   = sessionStorage.getItem('mb_id');
+    if (nome && tel && id) return { nome, tel, id };
+  } catch(e) {}
+  return null;
+}
+function limparSessao() { try { sessionStorage.clear(); } catch(e) {} }
+
+// ══════════════════════════════════════════════
+// TABELA DE PREÇOS - TERROIR MINEIRO
+// 0-6 km   → R$ 5,00 (taxa fixa)
+// Acima    → R$ 1,00 por km
+// ══════════════════════════════════════════════
+function calcularValor() {
+  const km = parseFloat(document.getElementById('km').value) || 0;
+  if (km <= 0) { document.getElementById('valor').value = ''; return; }
+  let valor = 0;
+  if (km <= 6) {
+    valor = 5.00;
+  } else {
+    valor = km * 1.00;
+  }
+  document.getElementById('valor').value = valor.toFixed(2);
+}
+
+// ══ DETECÇÃO AUTOMÁTICA DE PLATAFORMA ══
+function detectarPlataforma(valor) {
+  const sel     = document.getElementById('plataforma');
+  const limpo   = valor.trim();
+  const soNumeros = /^\d+$/.test(limpo);
+
+  if (soNumeros && limpo.length === 4) {
+    sel.value = 'iFood';
+  } else if (limpo.toLowerCase() === 'particular') {
+    sel.value = 'Particular';
+  }
+}
+
+// ══ BAIRROS FIXOS (calculados a partir de Rua Irineu Pinto, 175 - Venda Nova/BH) ══
+const bairrosFixos = [
+  { nome: 'Venda Nova',              km: 0.5 },
+  { nome: 'São João Batista',        km: 2.0 },
+  { nome: 'Jardim Leblon',           km: 2.5 },
+  { nome: 'Céu Azul',                km: 3.0 },
+  { nome: 'Jardim Atlântico',        km: 3.5 },
+  { nome: 'Santa Amélia',            km: 4.0 },
+  { nome: 'Minas Casa',              km: 3.8 },
+  { nome: 'Leticia',                 km: 3.2 },
+  { nome: 'Piratininga',             km: 3.5 },
+  { nome: 'Europa',                  km: 5.0 },
+  { nome: 'Planalto',                km: 4.5 },
+  { nome: 'Braúnas',                 km: 5.5 },
+  { nome: 'Trevo',                   km: 4.0 },
+  { nome: 'Pampulha',                km: 6.5 },
+  { nome: 'Céu Anil',                km: 5.0 },
+  { nome: 'Santa Branca',            km: 4.5 },
+  { nome: 'Copacabana',              km: 5.5 },
+  { nome: 'Candelária',              km: 5.0 },
+  { nome: 'Rio Branco',              km: 4.8 },
+  { nome: 'Itapoã',                  km: 6.0 },
+  { nome: 'Lagoa',                   km: 7.0 },
+  { nome: 'Ouro Preto',              km: 8.5 },
+  { nome: 'Justinópolis (Ribeirão)', km: 10.0 },
+  { nome: 'Santa Mônica',            km: 9.5 },
+  { nome: 'Centro (BH)',             km: 12.0 },
+  { nome: 'Savassi',                 km: 13.5 },
+  { nome: 'Lourdes',                 km: 13.0 },
+  { nome: 'Sagrada Família',         km: 11.5 },
+  { nome: 'Floresta',                km: 11.0 },
+  { nome: 'Caiçara',                 km: 14.0 },
+  { nome: 'Gameleira',               km: 16.0 },
+  { nome: 'Buritis',                 km: 17.0 },
+  { nome: 'Barreiro',                km: 19.0 },
+  { nome: 'Contagem (Centro)',       km: 15.0 },
+  { nome: 'Contagem Xangrilá',       km: 14.0 },
+  { nome: 'Contagem Industrial',     km: 16.5 },
+  { nome: 'Betim (Centro)',          km: 22.0 },
+  { nome: 'Pedro Leopoldo',          km: 15.0 },
+  { nome: 'Lagoa Santa',             km: 18.0 },
+  { nome: 'Confins',                 km: 14.0 },
+  { nome: 'Vespasiano',              km: 8.0 },
+];
+
+let bairrosDinamicos = [...bairrosFixos];
+
+function normalizar(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'');
+}
+
+function carregarBairros() {
+  db.collection('bairros').orderBy('nome').get()
+    .then(function(snap) {
+      const vistos = new Set(bairrosFixos.map(b => normalizar(b.nome)));
+      bairrosDinamicos = [...bairrosFixos];
+      snap.forEach(function(doc) {
+        const b = doc.data();
+        if (b.nome && b.km && !vistos.has(normalizar(b.nome))) {
+          bairrosDinamicos.push({ nome: b.nome, km: b.km, novo: true });
+          vistos.add(normalizar(b.nome));
+        }
+      });
+      bairrosDinamicos.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    })
+    .catch(function(e) {
+      console.warn('Erro ao carregar bairros:', e.message);
+      bairrosDinamicos = [...bairrosFixos];
+    });
+}
+
+async function salvarBairroSeNovo(nome, km) {
+  if (!nome || !km) return;
+  const nomeNorm = normalizar(nome);
+  const jaExiste = bairrosDinamicos.some(b => normalizar(b.nome) === nomeNorm);
+  if (jaExiste) return;
+  try {
+    const docId = nomeNorm.replace(/\s+/g, '_');
+    await db.collection('bairros').doc(docId).set({
+      nome: nome, km: km, criadoEm: new Date().toISOString()
+    });
+    bairrosDinamicos.push({ nome, km, novo: true });
+    bairrosDinamicos.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  } catch(e) {
+    console.warn('Bairro não pôde ser salvo:', e.message);
+  }
+}
+
+function filtrarBairros(texto) {
+  const box = document.getElementById('sugestoes-bairro');
+  if (!texto || texto.length < 1) { box.style.display = 'none'; return; }
+  const filtrados = bairrosDinamicos.filter(b =>
+    normalizar(b.nome).includes(normalizar(texto))
+  );
+  if (filtrados.length === 0) { box.style.display = 'none'; return; }
+  box.innerHTML = filtrados.map(b => `
+    <div
+      onclick="selecionarBairro('${b.nome.replace(/'/g,"\\'")}', ${b.km})"
+      onmousedown="event.preventDefault()"
+      onmouseover="this.style.background='#FEF3C7'"
+      onmouseout="this.style.background='#fff'"
+      style="padding:10px 14px;cursor:pointer;font-size:0.9rem;color:#2D1810;
+             border-bottom:1px solid #E8D5B5;display:flex;align-items:center;
+             justify-content:space-between;background:#fff;">
+      <span>
+        📍 ${b.nome}
+        ${b.novo ? '<span class="badge-novo">novo</span>' : ''}
+      </span>
+      <span style="color:#9B8B7A;font-size:0.8rem;white-space:nowrap;margin-left:8px;">
+        ${b.km} km
+      </span>
+    </div>
+  `).join('');
+  box.style.display = 'block';
+}
+
+function selecionarBairro(nome, km) {
+  document.getElementById('endereco').value = nome;
+  document.getElementById('km').value       = km;
+  document.getElementById('sugestoes-bairro').style.display = 'none';
+  calcularValor();
+}
+
+function fecharSugestoes() {
+  setTimeout(function() {
+    const box = document.getElementById('sugestoes-bairro');
+    if (box) box.style.display = 'none';
+  }, 150);
+}
+
+// ══ LOGIN ══
+function verificarLogin() {
+  const sessao = carregarSessao();
+  if (sessao) { motoboyInfo = sessao; aplicarLogin(); }
+  else document.getElementById('modal-login').classList.remove('hidden');
+}
+function fazerLogin() {
+  const nome = document.getElementById('login-nome').value.trim();
+  const tel  = document.getElementById('login-tel').value.trim();
+  if (!nome || !tel) { document.getElementById('login-erro').classList.remove('hidden'); return; }
+  document.getElementById('login-erro').classList.add('hidden');
+  const id = 'MB_' + tel.replace(/\D/g, '');
+  salvarSessao(nome, tel, id);
+  motoboyInfo = { nome, tel, id };
+  aplicarLogin();
+}
+function aplicarLogin() {
+  document.getElementById('modal-login').classList.add('hidden');
+  document.getElementById('nome-motoboy').textContent = motoboyInfo.nome;
+  document.getElementById('tel-motoboy').textContent  = '📱 ' + motoboyInfo.tel;
+  document.getElementById('data-selecionada').value   = dataHoje;
+  carregarBairros();
+  iniciarListener();
+}
+function trocarUsuario() {
+  if (!confirm('Trocar de usuário? Você precisará se identificar novamente.')) return;
+  if (unsubscribeSnap) { unsubscribeSnap(); unsubscribeSnap = null; }
+  limparSessao();
+  motoboyInfo = null; pedidos = [];
+  document.getElementById('pedidos-list').innerHTML = '';
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('status-lista').classList.remove('hidden');
+  document.getElementById('modal-login').classList.remove('hidden');
+}
+
+// ══ LISTENER FIRESTORE ══
+function iniciarListener() {
+  if (unsubscribeSnap) { unsubscribeSnap(); unsubscribeSnap = null; }
+  const dataSel       = document.getElementById('data-selecionada').value;
+  const statusConexao = document.getElementById('status-conexao');
+  const statusLista   = document.getElementById('status-lista');
+  statusConexao.className   = 'status-bar';
+  statusConexao.textContent  = '🔄 Conectando...';
+  statusLista.innerHTML      = '<span class="spinner"></span>Carregando pedidos...';
+  statusLista.classList.remove('hidden');
+  try {
+    unsubscribeSnap = db.collection('pedidos')
+      .where('motoboyId', '==', motoboyInfo.id)
+      .where('data', '==', dataSel)
+      .onSnapshot(function(snapshot) {
+        pedidos = [];
+        snapshot.forEach(function(doc) { pedidos.push({ firebaseId: doc.id, ...doc.data() }); });
+        pedidos.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        statusConexao.className   = 'status-bar ok';
+        statusConexao.textContent  = '✅ Conectado — sincronizando em tempo real';
+        statusLista.classList.add('hidden');
+        atualizarLista();
+      }, function(error) {
+        statusConexao.className   = 'status-bar erro';
+        statusConexao.textContent  = '❌ Erro: ' + error.message;
+        statusLista.innerHTML      = '❌ Erro ao carregar. Verifique a conexão.';
+      });
+  } catch(e) {
+    statusConexao.className   = 'status-bar erro';
+    statusConexao.textContent  = '❌ Erro ao iniciar: ' + e.message;
+  }
+}
+function trocarData() { if (motoboyInfo) iniciarListener(); }
+
+// ══ ADICIONAR PEDIDO ══
+async function adicionarPedido() {
+  const codigo     = document.getElementById('codigo').value.trim();
+  const plataforma = document.getElementById('plataforma').value;
+  const endereco   = document.getElementById('endereco').value.trim();
+  const km         = parseFloat(document.getElementById('km').value) || 0;
+  const valor      = parseFloat(document.getElementById('valor').value) || 0;
+  const dataSel    = document.getElementById('data-selecionada').value;
+
+  if (!codigo || !plataforma || !endereco || valor <= 0) { alert('⚠️ Preencha todos os campos!'); return; }
+
+  const btn = document.getElementById('btn-add-pedido');
+  btn.disabled = true; btn.textContent = '⏳ Salvando...';
+  try {
+    await db.collection('pedidos').add({
+      codigo, plataforma, endereco, km, valor,
+      motoboyId: motoboyInfo.id, motoboyNome: motoboyInfo.nome, motoboyTel: motoboyInfo.tel,
+      data: dataSel, timestamp: new Date().toISOString()
+    });
+
+    // salva bairro automaticamente se for novo
+    if (km > 0) await salvarBairroSeNovo(endereco, km);
+
+    ['codigo','endereco','km','valor'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('plataforma').value = 'iFood';
+    alert('✅ Pedido registrado!');
+  } catch(e) {
+    alert('❌ Erro ao salvar: ' + e.message); console.error(e);
+  } finally {
+    btn.disabled = false; btn.innerHTML = '➕ Adicionar Pedido';
+  }
+}
+
+// ══ ADICIONAR DIÁRIA ══
+async function adicionarDiaria() {
+  const dataSel   = document.getElementById('data-selecionada').value;
+  let valorDiaria = parseFloat(document.getElementById('diaria-valor').value);
+  if (!valorDiaria || valorDiaria <= 0) valorDiaria = DIARIA_FIXA;
+  const desc = `Diária do dia`;
+  const btn = document.getElementById('btn-add-diaria');
+  btn.disabled = true; btn.textContent = '⏳ Salvando...';
+  try {
+    await db.collection('pedidos').add({
+      codigo: 'DIARIA-' + Date.now(), plataforma: 'Diária', endereco: desc,
+      km: 0, valor: valorDiaria,
+      motoboyId: motoboyInfo.id, motoboyNome: motoboyInfo.nome, motoboyTel: motoboyInfo.tel,
+      data: dataSel, timestamp: new Date().toISOString()
+    });
+    document.getElementById('diaria-valor').value = '';
+    alert('✅ Diária registrada: R$ ' + valorDiaria.toFixed(2));
+  } catch(e) { alert('❌ Erro ao salvar diária: ' + e.message); console.error(e); }
+  finally { btn.disabled = false; btn.innerHTML = '➕ Adicionar Diária'; }
+}
+
+// ══ ADICIONAR ADIANTAMENTO ══
+async function adicionarAdiantamento() {
+  const valor   = parseFloat(document.getElementById('adiant-valor').value) || 0;
+  const desc    = document.getElementById('adiant-desc').value.trim();
+  const dataSel = document.getElementById('data-selecionada').value;
+  if (valor <= 0) { alert('⚠️ Informe um valor válido!'); return; }
+  if (!desc)      { alert('⚠️ Informe a descrição!'); return; }
+  const btn = document.getElementById('btn-add-adiant');
+  btn.disabled = true; btn.textContent = '⏳ Salvando...';
+  try {
+    await db.collection('pedidos').add({
+      codigo: 'ADI-' + Date.now(), plataforma: 'Adiantamento', endereco: desc,
+      km: 0, valor: -valor,
+      motoboyId: motoboyInfo.id, motoboyNome: motoboyInfo.nome, motoboyTel: motoboyInfo.tel,
+      data: dataSel, timestamp: new Date().toISOString()
+    });
+    document.getElementById('adiant-valor').value = '';
+    document.getElementById('adiant-desc').value  = '';
+    alert('✅ Adiantamento registrado!');
+  } catch(e) { alert('❌ Erro ao salvar: ' + e.message); console.error(e); }
+  finally { btn.disabled = false; btn.innerHTML = '➕ Adicionar'; }
+}
+
+// ══ DELETAR ══
+async function deletarPedido(id) {
+  if (!confirm('🗑️ Excluir este pedido?')) return;
+  try { await db.collection('pedidos').doc(id).delete(); }
+  catch(e) { alert('❌ Erro ao excluir: ' + e.message); }
+}
+
+// ══ ATUALIZAR LISTA ══
+function atualizarLista() {
+  const lista      = document.getElementById('pedidos-list');
+  const emptyState = document.getElementById('empty-state');
+  const totalCard  = document.getElementById('total-card');
+  const acoesHoje  = document.getElementById('acoes-hoje');
+  if (pedidos.length === 0) {
+    emptyState.classList.remove('hidden'); lista.innerHTML = '';
+    totalCard.classList.add('hidden'); acoesHoje.classList.add('hidden'); return;
+  }
+  emptyState.classList.add('hidden');
+  totalCard.classList.remove('hidden'); acoesHoje.classList.remove('hidden');
+  let html = '', total = 0;
+  pedidos.forEach(p => {
+    const valorAbs = Math.abs(p.valor).toFixed(2).replace('.', ',');
+    const sinal    = p.valor < 0 ? '− R$' : 'R$';
+    const neg      = p.valor < 0 ? 'negativo' : '';
+    html += `<div class="pedido-item">
+      <div class="pedido-info">
+        <div class="pedido-codigo">#${p.codigo}</div>
+        <div class="pedido-meta">${p.plataforma} · ${p.endereco}${p.km > 0 ? ` · ${p.km} km` : ''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="pedido-valor ${neg}">${sinal} ${valorAbs}</div>
+        <button class="btn-del" onclick="deletarPedido('${p.firebaseId}')" title="Excluir">🗑️</button>
+      </div>
+    </div>`;
+    total += p.valor;
+  });
+  lista.innerHTML = html;
+  document.getElementById('total-valor').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+}
+
+// ══ PDF ══
+function gerarPDFHoje() {
+  if (!window.jspdf || !window.jspdf.jsPDF) { alert('PDF não carregou, recarregue.'); return; }
+  if (!pedidos || pedidos.length === 0)      { alert('Nenhum pedido hoje.'); return; }
+  const data    = document.getElementById('data-selecionada').value;
+  const dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const jsPDF   = window.jspdf.jsPDF;
+  const pdf     = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210, brown=[139,69,19], orange=[217,119,6], green=[31,122,79], red=[192,57,43], gray=[100,80,130], white=[255,255,255];
+  const corridas      = pedidos.filter(p => p.plataforma!=='Diária' && p.plataforma!=='Adiantamento');
+  const diarias       = pedidos.filter(p => p.plataforma==='Diária');
+  const adiantamentos = pedidos.filter(p => p.plataforma==='Adiantamento');
+  const totalGeral    = pedidos.reduce((s,p) => s+p.valor, 0);
+  pdf.setFillColor(...brown); pdf.rect(0,0,W,40,'F');
+  pdf.setFontSize(22); pdf.setFont('helvetica','bold'); pdf.setTextColor(255,255,255);
+  pdf.text('Terroir Mineiro',14,17);
+  pdf.setFontSize(10); pdf.setFont('helvetica','normal'); pdf.setTextColor(253,230,138);
+  pdf.text('Hamburgueria · Relatório de Entregas',14,26);
+  pdf.setFontSize(8.5); pdf.setTextColor(220,200,170);
+  pdf.text('Rua Irineu Pinto, 175 - Venda Nova, Belo Horizonte - MG',14,33);
+  pdf.setFontSize(8.5); pdf.setTextColor(255,255,255);
+  pdf.text(dataFmt,W-14,26,{align:'right'});
+  pdf.setFillColor(245,230,211); pdf.roundedRect(14,46,W-28,22,4,4,'F');
+  pdf.setFontSize(12); pdf.setFont('helvetica','bold'); pdf.setTextColor(...brown);
+  pdf.text('Motoboy: '+motoboyInfo.nome,20,55);
+  pdf.setFontSize(9); pdf.setFont('helvetica','normal'); pdf.setTextColor(...gray);
+  if(motoboyInfo.tel) pdf.text('Telefone: '+motoboyInfo.tel,20,63);
+  let curY = 76;
+  pdf.setFontSize(10); pdf.setFont('helvetica','bold'); pdf.setTextColor(...brown);
+  pdf.text('Corridas',14,curY); curY+=4;
+  pdf.autoTable({startY:curY,head:[['','Pedido','Plataforma','Endereço','KM','Valor']],body:corridas.length>0?corridas.map((p,i)=>[String(i+1),'#'+p.codigo,p.plataforma,p.endereco.length>40?p.endereco.substring(0,40)+'...':p.endereco,Number(p.km).toFixed(1)+' km','R$ '+Number(p.valor).toFixed(2).replace('.',',')]):[['—','—','—','Nenhuma corrida','—','—']],theme:'grid',headStyles:{fillColor:brown,textColor:white,fontStyle:'bold',fontSize:8.5,halign:'center'},bodyStyles:{fontSize:8,textColor:[45,24,16]},alternateRowStyles:{fillColor:[255,248,231]},columnStyles:{0:{halign:'center',cellWidth:8},1:{halign:'center',cellWidth:22},2:{halign:'center',cellWidth:24},3:{cellWidth:82},4:{halign:'center',cellWidth:16},5:{halign:'right',cellWidth:26,fontStyle:'bold',textColor:green}},margin:{left:14,right:14}});
+  curY = pdf.lastAutoTable.finalY+8;
+  if(diarias.length>0){pdf.setFontSize(10);pdf.setFont('helvetica','bold');pdf.setTextColor(...brown);pdf.text('Diária',14,curY);curY+=4;pdf.autoTable({startY:curY,head:[['Descrição','Valor']],body:diarias.map(p=>[p.endereco,'R$ '+Number(p.valor).toFixed(2).replace('.',',')]),theme:'grid',headStyles:{fillColor:orange,textColor:white,fontStyle:'bold',fontSize:8.5},bodyStyles:{fontSize:8.5},columnStyles:{0:{cellWidth:160},1:{halign:'right',cellWidth:18,fontStyle:'bold',textColor:green}},margin:{left:14,right:14}});curY=pdf.lastAutoTable.finalY+8;}
+  if(adiantamentos.length>0){pdf.setFontSize(10);pdf.setFont('helvetica','bold');pdf.setTextColor(...brown);pdf.text('Descontos / Adiantamentos',14,curY);curY+=4;pdf.autoTable({startY:curY,head:[['Descrição','Valor']],body:adiantamentos.map(p=>[p.endereco,'- R$ '+Math.abs(p.valor).toFixed(2).replace('.',',')]),theme:'grid',headStyles:{fillColor:red,textColor:white,fontStyle:'bold',fontSize:8.5},bodyStyles:{fontSize:8.5},columnStyles:{0:{cellWidth:160},1:{halign:'right',cellWidth:18,fontStyle:'bold',textColor:red}},margin:{left:14,right:14}});curY=pdf.lastAutoTable.finalY+8;}
+  pdf.setFillColor(245,230,211);pdf.roundedRect(14,curY,W-28,36,5,5,'F');
+  pdf.setFontSize(10);pdf.setFont('helvetica','bold');pdf.setTextColor(...brown);pdf.text('Resumo',20,curY+10);
+  let lx=20,rx=W-20,ly=curY+20;
+  pdf.setFontSize(9);pdf.setFont('helvetica','normal');pdf.setTextColor(...gray);
+  pdf.text('Total do dia ('+pedidos.length+' lançamentos):',lx,ly);
+  pdf.setFont('helvetica','bold');pdf.setTextColor(...green);
+  pdf.text('R$ '+totalGeral.toFixed(2).replace('.',','),rx,ly,{align:'right'});ly+=3;
+  pdf.setDrawColor(...orange);pdf.setLineWidth(0.5);pdf.line(20,ly,W-20,ly);ly+=3;
+  pdf.setFillColor(...orange);pdf.roundedRect(14,ly,W-28,18,4,4,'F');
+  pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.setTextColor(255,255,255);
+  pdf.text('TOTAL DO DIA',lx,ly+12);pdf.setFontSize(14);
+  pdf.text('R$ '+totalGeral.toFixed(2).replace('.',','),rx,ly+12,{align:'right'});
+  const foot=ly+28;
+  pdf.setFontSize(7.5);pdf.setFont('helvetica','normal');pdf.setTextColor(...gray);
+  pdf.text('Gerado pelo motoboy '+motoboyInfo.nome+' · Terroir Mineiro',W/2,foot,{align:'center'});
+  pdf.text('Emitido em: '+new Date().toLocaleString('pt-BR'),W/2,foot+5,{align:'center'});
+  pdf.save('relatorio_'+motoboyInfo.nome.replace(/\s+/g,'_')+'_'+data+'.pdf');
+}
+
+// ══ WHATSAPP ══
+function enviarWhatsAppHoje() {
+  if(!pedidos||pedidos.length===0){alert('Nenhum pedido hoje.');return;}
+  const data    = document.getElementById('data-selecionada').value;
+  const dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+  const corridas=pedidos.filter(p=>p.plataforma!=='Diária'&&p.plataforma!=='Adiantamento');
+  const diarias=pedidos.filter(p=>p.plataforma==='Diária');
+  const adiant=pedidos.filter(p=>p.plataforma==='Adiantamento');
+  const total=pedidos.reduce((s,p)=>s+p.valor,0);
+  let msg='🍔 *Terroir Mineiro — Relatório*\n📅 '+dataFmt+'\n🛵 Motoboy: *'+motoboyInfo.nome+'*\n\n';
+  if(corridas.length>0){msg+='📦 *Corridas ('+corridas.length+')*\n';corridas.forEach((p,i)=>{msg+=(i+1)+'. #'+p.codigo+' — '+p.plataforma+' — '+p.endereco+' ('+p.km+'km) — R$ '+Number(p.valor).toFixed(2).replace('.',',')+'\n';});msg+='\n';}
+  if(diarias.length>0){msg+='💵 *Diária*\n';diarias.forEach(p=>{msg+=p.endereco+' — R$ '+Number(p.valor).toFixed(2).replace('.',',')+'\n';});msg+='\n';}
+  if(adiant.length>0){msg+='💸 *Descontos*\n';adiant.forEach(p=>{msg+=p.endereco+' — - R$ '+Math.abs(p.valor).toFixed(2).replace('.',',')+'\n';});msg+='\n';}
+  msg+='💰 *TOTAL: R$ '+total.toFixed(2).replace('.',',')+' *\n\n_Terroir Mineiro — Rua Irineu Pinto, 175 - Venda Nova_';
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+
+// ══ INIT ══
+verificarLogin();
+</script>
+</body>
+</html>
