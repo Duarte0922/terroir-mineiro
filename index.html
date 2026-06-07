@@ -234,12 +234,12 @@ input:focus{border-color:var(--brown);background:#fff;}
 <label class="filter-label">Motoboy</label>
 <input type="text" id="filtro-nome" placeholder="Buscar por nome...">
 </div>
-<button class="btn-filter" onclick="carregar()"> Atualizar</button>
+<button class="btn-filter" onclick="carregar()">🔍 Atualizar</button>
 </div>
 <div id="content"><div class="loading"><div class="spinner"></div></div></div>
 </div>
 <div id="tab-semana" class="tab-content">
-<div class="semana-header"> Esta Semana</div>
+<div class="semana-header">📅 Esta Semana</div>
 <div class="semana-grid" id="semana-grid"><div class="loading"><div class="spinner"></div></div></div>
 <div class="semana-resumo">
 <div class="sr-col"><div class="sr-lbl">Pedidos</div><div class="sr-val" id="sr-pedidos">0</div></div>
@@ -253,9 +253,10 @@ input:focus{border-color:var(--brown);background:#fff;}
 </div>
 </div>
 
+<!-- MODAL LINK -->
 <div class="modal-overlay hidden" id="modal-link">
 <div class="modal">
-<div class="modal-title"> Link para o Motoboy</div>
+<div class="modal-title">📱 Link para o Motoboy</div>
 <div class="modal-sub">O motoboy abre no celular e registra as entregas.</div>
 <div class="link-box" id="link-box"></div>
 <div class="modal-actions">
@@ -266,9 +267,10 @@ input:focus{border-color:var(--brown);background:#fff;}
 </div>
 </div>
 
+<!-- MODAL PAGAR -->
 <div class="modal-overlay hidden" id="modal-pagar">
 <div class="modal-pagar">
-<div class="mp-icon"></div>
+<div class="mp-icon">💰</div>
 <div class="mp-title" id="mp-title">Pagar Motoboy</div>
 <div class="mp-sub" id="mp-sub">Informe os valores e confirme.</div>
 <div id="mp-diaria-info" class="mp-diaria-info"></div>
@@ -285,7 +287,7 @@ input:focus{border-color:var(--brown);background:#fff;}
 </div>
 <div class="mp-resumo" id="mp-resumo"></div>
 <div class="mp-total">
-<span> Total a pagar via PIX</span>
+<span>💚 Total a pagar via PIX</span>
 <span id="mp-total-val">R$ 0,00</span>
 </div>
 <div class="mp-actions">
@@ -295,6 +297,7 @@ input:focus{border-color:var(--brown);background:#fff;}
 </div>
 </div>
 
+<!-- MODAL REABRIR -->
 <div class="modal-overlay hidden" id="modal-reabrir">
 <div class="modal-reabrir">
 <div class="mr-icon">🔓</div>
@@ -307,6 +310,7 @@ input:focus{border-color:var(--brown);background:#fff;}
 </div>
 </div>
 
+<!-- MODAL PÓS PDF -->
 <div class="modal-overlay hidden" id="modal-pos">
 <div class="modal-pos">
 <div class="pos-icon">🎉</div>
@@ -320,6 +324,7 @@ input:focus{border-color:var(--brown);background:#fff;}
 </div>
 </div>
 
+<!-- MODAL DELETE -->
 <div class="modal-overlay hidden" id="modal-senha">
 <div class="senha-modal">
 <div class="senha-title">🔐 Confirmar exclusão</div>
@@ -355,7 +360,7 @@ const db = firebase.firestore();
 const SENHA = 'terroir123';
 const hoje  = new Date().toLocaleDateString('en-CA');
 const ENDERECO_LOJA = 'Rua Irineu Pinto, 175';
-const DIARIA_FIXA = 60.00; // ← Diária fixa para todos os dias
+const DIARIA_FIXA = 60.00;
 
 function fmtR(v)    { return 'R$ '+Number(v).toFixed(2).replace('.',','); }
 function fmtData(d) { return new Date(d+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}); }
@@ -366,7 +371,7 @@ const platClass = {iFood:'plat-ifood','99':'plat-99',Particular:'plat-particular
 
 // ═ DIÁRIA FIXA ══
 function calcularDiaria(data) {
-  return DIARIA_FIXA; // Sempre R$ 60,00
+  return DIARIA_FIXA;
 }
 function infoDiaria(data) {
   const dia = nomeDiaSemana(data);
@@ -403,10 +408,9 @@ function mudarTab(tab) {
   if(tab==='historico') carregarHistorico();
 }
 
+// ══ MODAL LINK ══
 function abrirModal() {
   var url = window.location.href;
-  
-  // Tenta substituir diferentes nomes possíveis do arquivo
   if (url.includes('terroir-loja.html')) {
     url = url.replace('terroir-loja.html', 'terroir-motoboy.html');
   } else if (url.includes('index.html')) {
@@ -414,14 +418,34 @@ function abrirModal() {
   } else if (url.includes('loja.html')) {
     url = url.replace('loja.html', 'terroir-motoboy.html');
   } else {
-    // Se não encontrar nenhum dos nomes, adiciona o arquivo no final
     if (!url.endsWith('/')) url += '/';
     url += 'terroir-motoboy.html';
   }
-  
   document.getElementById('link-box').textContent = url;
   document.getElementById('modal-link').classList.remove('hidden');
 }
+function fecharModal(){ document.getElementById('modal-link').classList.add('hidden'); }
+function copiarLink(){ 
+  var link = document.getElementById('link-box').textContent;
+  navigator.clipboard.writeText(link)
+    .then(function(){ alert('✅ Copiado!'); })
+    .catch(function(err){
+      var input = document.createElement('input');
+      input.value = link;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      alert('✅ Copiado!');
+    }); 
+}
+function enviarLinkWhatsapp(){ 
+  var link = document.getElementById('link-box').textContent;
+  var msg = '🍔 Registre suas entregas no Terroir Mineiro:\n\n' + link;
+  window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank'); 
+}
+
+// ══ MODAL PAGAR ══
 function abrirModalPagar(motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel) {
   _pendingPagar = { motoboyId, motoboyNome, motoboyTel, valorCorridas, anterior, dataSel };
   const info = infoDiaria(dataSel);
@@ -482,6 +506,7 @@ function confirmarPagamento() {
   }).catch(function(e){ alert('Erro ao salvar: '+e.message); });
 }
 
+// ══ MODAL REABRIR ══
 function abrirModalReabrir(motoboyId, motoboyNome, dataSel) {
   _pendingReabrir = { motoboyId, motoboyNome, dataSel };
   document.getElementById('mr-title').textContent = 'Reabrir dia — '+motoboyNome+'?';
@@ -498,6 +523,7 @@ function confirmarReabrir() {
   }).catch(function(e){ alert('Erro: '+e.message); });
 }
 
+// ══ MODAL PÓS / PDF ══
 function fecharModalPos(){ document.getElementById('modal-pos').classList.add('hidden'); }
 function baixarPDF() {
   if(!_dadosPDF){ alert('Nenhum dado disponível.'); return; }
@@ -529,6 +555,7 @@ function enviarZap() {
   setTimeout(function(){ window.open(url,'_blank'); }, 800);
 }
 
+// ══ CONSTRUIR PDF ══
 function construirPDF(d) {
   if(!window.jspdf||!window.jspdf.jsPDF) throw new Error('jsPDF não carregou!');
   var jsPDF = window.jspdf.jsPDF;
@@ -539,9 +566,9 @@ function construirPDF(d) {
   pdf.setFillColor(brown[0],brown[1],brown[2]); pdf.rect(0,0,W,42,'F');
   pdf.setFontSize(24); pdf.setFont('helvetica','bold'); pdf.setTextColor(255,255,255);
   pdf.text('Terroir Mineiro',14,18);
-  pdf.setFontSize(10); pdf.setFont('helvetica','normal'); pdf.setTextColor(253,227,167);
+  pdf.setFontSize(10); pdf.setFont('helvetica','normal'); pdf.setTextColor(253,230,138);
   pdf.text('Comprovante de Pagamento',14,27);
-  pdf.setFontSize(8.5); pdf.setTextColor(210,190,230);
+  pdf.setFontSize(8.5); pdf.setTextColor(220,200,170);
   pdf.text(ENDERECO_LOJA,14,34);
   pdf.setFontSize(8.5); pdf.setTextColor(255,255,255);
   pdf.text(dataFmt,W-14,26,{align:'right'});
@@ -616,6 +643,7 @@ function construirPDF(d) {
   return pdf;
 }
 
+// ══ CARREGAR DIA ══
 function carregar() {
   var dataSel     = document.getElementById('filtro-data').value || hoje;
   var filtroNome  = document.getElementById('filtro-nome').value.toLowerCase().trim();
@@ -706,7 +734,7 @@ function carregar() {
       html += '<div class="mb-meta">'+g.pedidos.length+' pedido(s) · '+fmtData(dataSel)+'</div>';
       if(tel) html += '<div class="mb-tel">📱 '+tel+'</div>';
       html += '</div>';
-      html += '<span class="pagamento-tag '+(status==='pago'?'tag-pago':'tag-pendente')+'">'+(status==='pago'?'✅ PAGO':' PENDENTE')+'</span>';
+      html += '<span class="pagamento-tag '+(status==='pago'?'tag-pago':'tag-pendente')+'">'+(status==='pago'?'✅ PAGO':'⏳ PENDENTE')+'</span>';
       html += '</div>';
       html += '<table class="orders-table"><thead><tr><th>Pedido</th><th>Plataforma</th><th>Endereço</th><th>KM</th><th class="r">Valor</th><th></th></tr></thead><tbody>';
       g.pedidos.forEach(function(p){
